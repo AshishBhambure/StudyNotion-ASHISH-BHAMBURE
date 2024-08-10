@@ -19,18 +19,19 @@ app.use(fileUpload({
     tempFileDir : '/tmp/',
 }));
 app.use(
-    cors({
-      origin: '*', // Allow all origins
-      credentials: true,
-    })
-  );
-  
+    cors(
+        {
+            origin:"*",
+            credentials:true,
+        }
+    )
+)
 connect();
 
 const router = require('./router/routes');
 
 app.get('/', (req, res) => { res.send("App Started !!"); });
-// app.use('/api',router);
+app.use(router);
 app.get("/",(req,res)=>{
     return res.json({
         success:true,

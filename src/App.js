@@ -29,7 +29,7 @@ import Instructor from "./components/core/DashBoard/InstructorDashboard/Instruct
 import ContactUs from "./pages/ContactUs";
 import Error from "./pages/Error";
 function App() {  
-  const user = useSelector((state)=>state.profile)
+  const user = useSelector((state)=>state.profile) 
   const [isLoggendIn,setIsLoggedIn] = useState(false);
   return (
     <div className=" relative w-screen min-h-screen  bg-richblack-900 flex flex-col font-inter">
