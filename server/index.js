@@ -30,7 +30,7 @@ connect();
 const router = require('./router/routes');
 
 app.get('/', (req, res) => { res.send("App Started !!"); });
-app.use('/api',router);
+// app.use('/api',router);
 app.get("/",(req,res)=>{
     return res.json({
         success:true,
