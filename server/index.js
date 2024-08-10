@@ -19,13 +19,12 @@ app.use(fileUpload({
     tempFileDir : '/tmp/',
 }));
 app.use(
-    cors(
-        {
-            origin:"http://localhost:3000",
-            credentials:true,
-        }
-    )
-)
+    cors({
+      origin: '*', // Allow all origins
+      credentials: true,
+    })
+  );
+  
 connect();
 
 const router = require('./router/routes');

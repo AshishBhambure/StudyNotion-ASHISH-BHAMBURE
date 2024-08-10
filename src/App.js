@@ -28,7 +28,7 @@ import VideoDetails from "./components/core/ViewCourse/VideoDetails";
 import Instructor from "./components/core/DashBoard/InstructorDashboard/Instructor";
 import ContactUs from "./pages/ContactUs";
 import Error from "./pages/Error";
-function App() {
+function App() {  
   const user = useSelector((state)=>state.profile)
   const [isLoggendIn,setIsLoggedIn] = useState(false);
   return (
