@@ -64,104 +64,104 @@ exports.sendOtp = async(req,res)=>{
 };
 
 //signup
-exports.signUp = async (req,res)=>{
+exports.signUp = async (req, res) => {
+    try {
+        // Fetch data from req body
+        const { firstName, lastName, email, password, confirmPassword, contactNumber, otp, accountType } = req.body;
+        console.log("Account Type -->> ", accountType);
 
+        // Validate
+        if (!firstName || !lastName || !email || !password || !confirmPassword || !otp) {
+            return res.status(403).json({
+                success: false,
+                message: "All Fields Are Required",
+            });
+        }
 
-    try{
+        // 2 password match
+        if (password !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Password and Confirm Password do not match",
+            });
+        }
 
+        // Check if user already exists
+        const existingUser = await User.findOne({ email: email });
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: "User is Already Registered",
+            });
+        }
 
-        //Fetch data from req body
-    const{firstName,lastName,email,password,confirmPassword,contactNumber,otp,accountType} =req.body;
-      console.log("Account Type -->> ", accountType)
-   
-    //validate
-    console.log(firstName,lastName,email,password,confirmPassword,otp)
-    if(!firstName || !lastName || !email || !password || !confirmPassword || !otp){
-        return res.status(403).json({
-            success:false,
-            message:"All Feilds Are Reqiured",
-        })
-      }
-    //2password match
-    if(password !== confirmPassword){
-        return res.status(400).json({
-            success:false,
-            message:"Password != confirmPassword",
-        })
-    }
-   //check user already Exists ?
-   const existingUser = await User.findOne({email:email});
-   console.log(existingUser);
-   if(existingUser){
-    return res.status(400).json({
-        success:false,
-        message:"User is Already Registerd",
+        // Find the most recent OTP for the user
+        const recentOtp = await Otp.findOne({ email: email }).sort({ createdAt: -1 });
 
-    })
-   }
-   //Find Most Resentd Otp For The USer
-   const recentOtp = await Otp.findOne({email:email}).sort({createdAt:-1}).limit(1);
-   
-   console.log("Resent Otp -- >",recentOtp);
-  //validateOtp
-  if(recentOtp.otp.length  == 0){
-    return res.status(400).json({
-        success:false,
-        message:"Otp Length 0 (InValid)",
+        // Validate if OTP is found
+        if (!recentOtp) {
+            return res.status(400).json({
+                success: false,
+                message: "No OTP found for this email",
+            });
+        }
 
-    })
-  }
+        // Validate OTP length
+        if (recentOtp.otp.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP is invalid (length 0)",
+            });
+        }
 
-  else if(otp !== recentOtp.otp){
-    return res.status(400).json({
-        success:false,
-        messgae:"Otp not Matchecd",
+        // Validate if OTP matches
+        if (otp !== recentOtp.otp) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP does not match",
+            });
+        }
 
-    })
-  }
+        // Hash Password
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-  //Password HAsh
-  const hashedPassword = await bcrypt.hash(password,10);
+        // Create Profile in DB
+        const profileDetails = await Profile.create({
+            gender: null,
+            dateOfBirth: null,
+            about: null,
+            contactNumber: null,
+        });
 
-  //create Entry In Db
-  const profileDetails = await Profile.create({
-     gender:null,
-     dateOfBirth:null,
-     about:null,
-     contactNumber:null,
-  })
-  
-  const user= await User.create({
-    firstName,lastName,email,contactNumber,password:hashedPassword,
-    accountType,additionalDetails:profileDetails._id,
-    image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
-   
+        // Create User in DB
+        const user = await User.create({
+            firstName,
+            lastName,
+            email,
+            contactNumber,
+            password: hashedPassword,
+            accountType,
+            additionalDetails: profileDetails._id,
+            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
+        });
 
-  })
-  //return res
+        // Return response
+        return res.status(200).json({
+            success: true,
+            message: "User is Registered Successfully",
+            user,
+        });
 
-  return res.status(200).json({
-    success:true,
-    message:"User Is Registerd SsuccessFully ",
-    user,
-  })
-
-    }
-
-    catch(e){
+    } catch (e) {
         console.log("Error In SignUp ", e);
         return res.status(500).json({
-            success:false,
-            message:"User Cannot Be Registerd Try Agail Later ",
-            data:e.message,
-        })
+            success: false,
+            message: "User Cannot Be Registered. Try Again Later",
+            data: e.message,
+        });
     }
-  
-
-    
-    
-
 }
+
 
 
 
