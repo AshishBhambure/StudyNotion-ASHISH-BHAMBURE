@@ -20,7 +20,7 @@ const ExploreMore = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-6 items-center px-4 lg:relative lg:px-0">
+    <div className="w-full flex flex-col  gap-6 items-center px-4 lg:relative lg:px-0">
       <div className="flex flex-col text-center mb-10 ">
         <h1 className="text-3xl md:text-4xl text-white font-semibold">
           Unlock the <HighlightedText>Power Of Code</HighlightedText>
@@ -28,7 +28,7 @@ const ExploreMore = () => {
         <p className="text-white mt-2">Learn to Build Anything You Can Imagine</p>
       </div>
 
-      <div className="flex mb-10  flex-wrap justify-center items-center gap-2 text-richblack-50 bg-richblack-800 rounded-3xl px-4 py-2">
+      <div className="flex my-10 mb-20 flex-wrap justify-center items-center gap-2 text-richblack-50 bg-richblack-800 rounded-3xl px-4 py-2">
         {tabsName.map((tab, index) => (
           <div
             key={index}
@@ -40,12 +40,12 @@ const ExploreMore = () => {
         ))}
       </div>
 
-      <div className=" flex flex-wrap gap-4 lg:gap-6  mb-10 justify-center relative lg:top-0 lg:right-0 lg:w-full lg:py-8">
+      <div className=" p- flex flex-wrap gap-4 lg:gap-6  mb-10 justify-center relative lg:top-0 lg:right-0 lg:w-full lg:py-8">
         {courses.map((course, index) => (
           <div
             key={index}
             onClick={() => setCurrentCard(course.heading)}
-            className={`lg:absolute rounded-md  ${index%3 ==0 ? "right-0":""} ${index%3 ==1 ? "left-0":""} top-0 translate-y-[-20%] px-4 py-6 w-full md:w-[45%] lg:w-[30%] xl:w-[20%] flex flex-col gap-4 ${currentCard === course.heading ? "bg-white text-richblack-700   border-b-8 border-r-8 border-b-yellow-50  border-r-yellow-50 " : "bg-richblack-800"} transition-all duration-300`}
+            className={` lg:absolute rounded-md  ${index%3 ==0 ? "right-0":""} ${index%3 ==1 ? "left-0":""} top-0 translate-y-[-20%] px-4 py-6 w-full md:w-[45%] lg:w-[30%] xl:w-[20%] flex flex-col gap-4 ${currentCard === course.heading ? "bg-white text-richblack-700   border-b-8 border-r-8 border-b-yellow-50  border-r-yellow-50 " : "bg-richblack-800 text-white "} transition-all duration-1000 `}
           >
             <div className="text-xl font-semibold">{course.heading}</div>
             <div className="text-sm md:text-base">{course.description}</div>

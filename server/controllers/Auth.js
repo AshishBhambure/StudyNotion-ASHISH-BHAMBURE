@@ -95,10 +95,8 @@ exports.signUp = async (req, res) => {
             });
         }
 
-        // Find the most recent OTP for the user
         const recentOtp = await Otp.findOne({ email: email }).sort({ createdAt: -1 });
 
-        // Validate if OTP is found
         if (!recentOtp) {
             return res.status(400).json({
                 success: false,
@@ -106,7 +104,6 @@ exports.signUp = async (req, res) => {
             });
         }
 
-        // Validate OTP length
         if (recentOtp.otp.length === 0) {
             return res.status(400).json({
                 success: false,
@@ -114,7 +111,6 @@ exports.signUp = async (req, res) => {
             });
         }
 
-        // Validate if OTP matches
         if (otp !== recentOtp.otp) {
             return res.status(400).json({
                 success: false,
@@ -122,7 +118,6 @@ exports.signUp = async (req, res) => {
             });
         }
 
-        // Hash Password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create Profile in DB

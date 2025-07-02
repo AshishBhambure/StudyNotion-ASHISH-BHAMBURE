@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-const RequirementField = ({ name, label, register, errors, setValue }) => {
+const RequirementField = ({ name, label, register, errors, setValue ,requirments }) => {
     const [requirement, setRequirement] = useState("");
     const [requirementList, setRequirementList] = useState([]);
+
+    useEffect(()=>{
+        console.log("Reuiments -- ..." , requirments)
+        if(requirments){
+            setRequirementList(requirments);
+        }
+    },[])
 
     useEffect(() => {
         register(name, { required: true });

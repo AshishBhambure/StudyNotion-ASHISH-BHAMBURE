@@ -11,7 +11,7 @@ const PrivateRoute = ({children}) =>{
 else
 return(
     <div>
-          Please Login Broo.
+          Please Login.
           <button onClick={()=>navigate('/login')}> Login </button>
           
     </div>

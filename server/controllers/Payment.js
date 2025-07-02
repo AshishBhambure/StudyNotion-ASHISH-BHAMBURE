@@ -221,7 +221,7 @@ exports.capturePayment = async (req, res) => {
     const userId = req.user.id
     console.log("Capture Payment UID ",userId);
     if (courses.length === 0) {
-      return res.json({ success: false, message: "Please Provide Course ID" })
+       return res.json({ success: false, message: "Please Provide Course ID" })
     }
   
     let total_amount = 0
@@ -264,7 +264,7 @@ exports.capturePayment = async (req, res) => {
     try {
       // Initiate the payment using Razorpay
       const paymentResponse = await instance.orders.create(options)
-      console.log(paymentResponse)
+      console.log("Capturing Payemnt ", paymentResponse)
       res.json({
         success: true,
         data: paymentResponse,
@@ -300,6 +300,8 @@ exports.verifyPayment = async (req, res) => {
     }
   
     let body = razorpay_order_id + "|" + razorpay_payment_id
+
+    console.log("Body in Verification " , body);
   
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_SECRET)

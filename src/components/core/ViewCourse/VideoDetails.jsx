@@ -8,6 +8,7 @@ import { FaPlay } from 'react-icons/fa';
 import 'video-react/dist/video-react.css'; // import css
 import IconBtn from '../../common/IconButton';
 import { BigPlayButton } from 'video-react';
+import { updateCourseProgressDetails } from '../../../services/api';
 function VideoDetails() {
   const { courseId, sectionId, subSectionId } = useParams();
   const dispatch = useDispatch();
@@ -128,7 +129,13 @@ function VideoDetails() {
               {!completedLectures.includes(subSectionId) && (
                 <IconBtn
                   disabled={loading}
-                  onClick={() => handleLectureCompletion()}
+                   onClick={async () => {
+                                    await updateCourseProgressDetails({ courseId: courseId, subSectionId: subSectionId }, token)
+                                            console.log("Cl " , completedLectures)
+                                            if (!completedLectures.includes(subSectionId)) {
+                                              dispatch(updateCompletedLectures(subSectionId));
+                                            }
+                                          }}
                   text={!loading ? "Mark As Completed" : "Loading..."}
                   customClasses="text-xl max-w-max px-4 mx-auto"
                 />

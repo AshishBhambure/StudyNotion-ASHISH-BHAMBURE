@@ -67,7 +67,7 @@ const CodeBlocks = ({
                   whiteSpace: "pre-line",
                   display: "block",
                 }}
-                omitDeletionAnimation={true}
+                // omitDeletionAnimation={true}
               />
             </div>
           </div>

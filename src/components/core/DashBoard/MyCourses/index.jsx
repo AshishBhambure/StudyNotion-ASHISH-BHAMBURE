@@ -14,7 +14,7 @@ function MyCourses() {
     useEffect(() => {
         async function fetchCourses() {
             const result = await showAllCourses();
-            let filteredCourses =  result.filter((course)=>(course.instructor._id === user._id));
+            let filteredCourses =  result.filter((course)=>(course.instructor?._id === user?._id));
             setCourses(filteredCourses);;
         }
         setCourseDeleted(false);

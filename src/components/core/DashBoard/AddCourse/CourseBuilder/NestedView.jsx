@@ -62,6 +62,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
           <details key={section._id} open>
             {/* Section Dropdown Content */}
             <summary className="flex cursor-pointer items-center justify-between border-b-2 border-b-richblack-600 py-2">
+              
               <div className="flex items-center gap-x-3">
                 <RxDropdownMenu className="text-2xl text-richblack-50" />
                 <p className="font-semibold text-richblack-50">
@@ -116,6 +117,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
                       onClick={(e) => e.stopPropagation()}
                       className="flex items-center gap-x-3"
                     >
+                      
                       <button
                         onClick={() =>
                           setEditSubSection({ ...data, sectionId: section._id })

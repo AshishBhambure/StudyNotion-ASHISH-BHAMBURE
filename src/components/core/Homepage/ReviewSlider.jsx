@@ -48,19 +48,19 @@ function ReviewSlider() {
                            <div className=' bg-richblack-800 px-2 py-4   lg:min-w-[400px] rounded-md '>
                             <div className=' flex items-center gap-x-2'>
                             <img 
-                                src={review.user.image}
+                                src={review?.user?.image}
                                 alt='userImage'
                                 className='h-[50px] w-[50px] object-cover rounded-full' // Adjust the size
                             />
-                             <p>{review.user.firstName} {review.user.lastName}</p>
+                             <p>{review?.user?.firstName}  {review?.user?.lastName}</p>
                             </div>
                             <p>{review?.course?.courseName}</p>
                            
                             <p>
-                                {review.review}
+                                {review?.review}
                             </p>
                             <div className=' flex gap-4'>
-                            <p>{review.rating}</p>
+                            <p>{review?.rating}</p>
                              <RatingStars Review_Count={review.rating}></RatingStars>
                              </div>
                              </div>

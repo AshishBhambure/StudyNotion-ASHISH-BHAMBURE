@@ -25,19 +25,35 @@ function PublishCourse() {
         dispatch(setStep(2));
     }
 
-    const { course } = useSelector((state) => state.course);
+    const { course,editCourse  } = useSelector((state) => state.course);
+
+    useEffect(()=>{
+        if(editCourse){
+            if(editCourse.status == 'Draft'){
+                // console.log("Status -- Draft");
+                setValue('Published',false)
+            }
+            else{
+                console.log("Status -- Published");
+                setValue('Published',true)
+            }
+            // setValue('status', editCourse.status);
+        }
+    },[])
+    
     // const { token } = useSelector((state) => state.auth);
     // console.log("Token.... ",token);
     console.log("publish Course ",course );
 
     const onSubmit = async (data) => {
         let result;
-        if (data.draft === false) {
+        if (data.Published === false) {
             result = await updateCourseStatus({
                 status: 'Draft',
                 courseId: course._id
             });
         } else {
+            // console.log("Status : Published ");
             result = await updateCourseStatus({
                 status: 'Published',
                 courseId: course._id
@@ -65,13 +81,13 @@ function PublishCourse() {
                 <form className='flex flex-col gap-4' onSubmit={handleSubmit(onSubmit)}>
                     <div className='flex gap-2 items-center'>
                         <input
-                            id='draft'
-                            name='draft'
-                            {...register('draft')}
+                            id='Published'
+                            name='Published'
+                            {...register("Published", { valueAsBoolean: true })}
                             type='checkbox'
                             className='bg-richblack-600 custom-checkbox'
                         />
-                        <label htmlFor='draft' className='text-richblack-400 text-lg'>Make this Course as Public</label>
+                        <label htmlFor='Published' className='text-richblack-400 text-lg'>Make this Course as Public</label>
                     </div>
                     <div className='flex gap-4 self-end'>
                         <button className='px-2 py-1 bg-richblack-400 rounded-md' onClick={goBack}>

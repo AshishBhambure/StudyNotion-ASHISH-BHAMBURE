@@ -190,7 +190,7 @@ function CourseDetails() {
             <div className="my-8 border border-richblack-600 p-8">
               <p className="text-3xl font-semibold">What you'll learn</p>
               <div className="mt-5">
-                {/* <ReactMarkdown>{whatYouWillLearn}</ReactMarkdown> */}
+                <div>{whatYouWillLearn}</div>
               </div>
             </div>
   

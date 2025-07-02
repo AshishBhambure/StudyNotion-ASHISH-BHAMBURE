@@ -13,12 +13,9 @@ const otpSchema = new mongoose.Schema({
  },
  createdAt:{
     type:Date,
-    default:Date.now(),
+    default:Date.now,
     expires:5*60,
-
  }
- 
-
 })
 
 //function --> send mail

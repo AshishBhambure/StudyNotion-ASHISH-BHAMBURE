@@ -84,7 +84,7 @@ exports.categoryPageDetails = async (req, res) => {
         })
         .exec();
 
-        console.log('selectedCategory-------' ,selectedCategory);
+        // console.log('selectedCategory-------' ,selectedCategory);
 
         
   
@@ -135,8 +135,11 @@ exports.categoryPageDetails = async (req, res) => {
 
       const allCourses = allCategories.flatMap((category) => category.courses)
       const mostSellingCourses = allCourses
-        .sort((a, b) => b.sold - a.sold)
+        .sort((a, b) => b?.studentEnolled?.length - a?.studentEnolled?.length)
         .slice(0, 10)
+        
+        // mostSellingCourses.forEach((c)=>console.log(c.studentEnolled.length))
+        // console.log()
        // console.log("mostSellingCourses COURSE", mostSellingCourses)
       res.status(200).json({
         success: true,

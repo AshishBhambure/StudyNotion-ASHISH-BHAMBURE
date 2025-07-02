@@ -98,15 +98,16 @@ exports.deleteAccount = async(req,res)=>{
 
         //Delete User
          await User.findByIdAndDelete({_id:userId});
-            //HW --> unEnroll  user from all enrolled Courses
-        //return res
+         
+         await Course.updateMany(
+       { studentEnolled: userId },
+       { $pull: { studentEnolled: userId }}
+       );
+
         return res.status(200).json({
             message:"User Deleted Successfully !",
              success:false, 
         });
-        //How can we Delete profile by Sceduling 
-        //chrone Job
-
     } 
     catch(e)
     {
@@ -157,8 +158,8 @@ exports.getAllUserDetails = async (req,res)=>{
 exports.updateProfileImage = async(req,res)=>{
 
     try{
-        console.log("Body Of Request " ,req.body);
-        console.log("Body Of files " ,req.files);
+        // console.log("Body Of Request " ,req.body);
+        // console.log("Body Of files " ,req.files);
         
     //   formData.append("displayPicture", imageFile)
         const imageFile =  req.files.displayPicture ;

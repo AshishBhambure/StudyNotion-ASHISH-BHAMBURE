@@ -21,7 +21,7 @@ const SideBar = ({ isMobile, onClose }) => { // isMobile and onClose props added
             </div>
         );
     }
-
+    
     return (
         <>
             <div className={`flex ${isMobile ? 'flex-col p-4' : 'h-[calc(100vh-3.5rem)] min-w-[220px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800 py-10'}`}>

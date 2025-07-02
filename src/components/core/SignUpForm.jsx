@@ -37,17 +37,17 @@ function SignupForm() {
     formData.accountType = accountType;
     
     const newFormData = { ...formData};
-    console.log("Account Type is  :: ",accountType )
-    console.log("The Form Data is ::::: ",newFormData);
+    // console.log("Account Type is  :: ",accountType )
+    // console.log("The Form Data is ::::: ",newFormData);
     setFormData(formData);
 
     try {
       dispatch(setSignUp(formData));
       await dispatch(sendOtp(newFormData.email, navigate));
-      toast.success("OTP Sent Successfully!");
+     
     } catch (error) {
-      console.error("Error sending OTP:", error);
-      toast.error("Could not send OTP");
+      // console.error("Error sending OTP:", error);
+      // toast.error("Could not send OTP");
     }
   };
 

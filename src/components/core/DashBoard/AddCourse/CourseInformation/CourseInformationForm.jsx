@@ -8,7 +8,7 @@ import RequirementField from "./RequirmentFeild";
 import { setCourse, setEditCourse, setStep } from "../../../../../Reducer/slices/courseslice";
 import IconBtn from "../../../../common/IconButton";
 import toast from "react-hot-toast";
-import { addCourse, getAllCategories } from "../../../../../services/api";
+import { addCourse, editCourseFunc, getAllCategories } from "../../../../../services/api";
 import ChipInput from "./ChipInput";
 import Upload from "../Upload";
 
@@ -38,7 +38,7 @@ export default  function CourseInformationForm (){
     const dispatch = useDispatch();
    
     const {course,editCourse} = useSelector((state)=>state.course);
-    console.log("editCourse ---- ",editCourse);
+    // console.log("editCourse ---- ",editCourse);
     const [loading,setLoading] = useState(false);
     // const [categories,setCategories] = useState([]);
     const [courseCategories, setCourseCategories] = useState([]);
@@ -52,13 +52,14 @@ export default  function CourseInformationForm (){
 
 
             const categories = await dispatch(getAllCategories());
-            console.log("-------  Printing All The Categories After BackeNd Call --------- " , categories );
+            // console.log("-------  Printing All The Categories After BackeNd Call --------- " , categories );
 
             setCourseCategories(categories);
             setLoading(false);
             // console.log("Inside UseEffects .. ");
         };
-        console.log("Course Categories ---- -- - - - ", courseCategories);
+
+        // console.log("Course Categories ---- -- - - - ", courseCategories);
         if (editCourse) {
             // Add Another Things  -- added 
             console.log("Edit Course --> " , course);
@@ -68,7 +69,7 @@ export default  function CourseInformationForm (){
             console.log(" Setting  coursePrice -- " ,);
             setValue("coursePrice", course.price);
             setValue("courseTags", course.tag);
-            setValue("courseBenifits", course.whatYouWillLearn);
+            setValue("courseBenefits", course.whatYouWillLearn);
             setValue("courseCategory", course.category);
             setValue("courseRequirements", course.instructions);
             setValue("courseImage", course.tumbnail            );
@@ -116,11 +117,17 @@ export default  function CourseInformationForm (){
            formData.append("courseName" , currentValues.courseTitle);
 
         }
+        else{
+            formData.append("courseName" , course.courseName);
+        }
 
         if(currentValues.courseShortDesc !== course.courseDescription)
         {
            formData.append("courseDescription" , currentValues.courseShortDesc);
              
+        }
+        else{
+            formData.append("courseDescription" , course.courseDescription);
         }
 
         if(currentValues.coursePrice !== course.Price)
@@ -128,17 +135,26 @@ export default  function CourseInformationForm (){
            formData.append("price" , currentValues.coursePrice);
              
         }
+        else{
+            formData.append("price" , course.Price);
+        }
         if(currentValues.courseBenifits !== course.whatYouWillLearn)
         {
            formData.append("whatYouWillLearn" , currentValues.courseBenifits);
              
         }
+        else{
+            formData.append("whatYouWillLearn" , course.whatYouWillLearn);
+        }
 
-        // if(currentValues.courseTags !== course.tag)
-        // {
-        //    formData.append("tag" , currentValues.courseTags);
+        if(currentValues.courseTags !== course.tags)
+        {
+           formData.append("tag" , currentValues.courseTags);
              
-        // }
+        }
+        else{
+            formData.append("tag" , course.tags);
+        }
       
 
         // Some Error Will Occur In Course Categoriesc 
@@ -147,32 +163,35 @@ export default  function CourseInformationForm (){
            formData.append("category" , currentValues.courseCategory);
              
         }
+        else{
+            formData.append("category" , course.category);
+        }
 
-        if( currentValues.courseRequirments.toString() !== course.instructions.toString() )
+        // if( currentValues.courseRequirments.toString !== course.instructions.toString )
         {
            formData.append("instructions" , JSON.stringify(currentValues.courseRequirments));
              
         }
 
-        // if( currentValues.courseImage !== course.thumbnail )
-        // {
-        //    formData.append("thumbnail" , currentValues.courseImage);
+        if( currentValues.courseImage !== course.tumbnail )
+        {
+           formData.append("thumbnail" , currentValues.courseImage);
              
-        // }
-
-
-
+        }
 
         // Backend Call ToCreate Course 
         setLoading(true);
         // EditCourse Api  Send Token 
+        // const result = await dispatch(editCourseFunc(formData,token));
+        // console.log("result ");
         setLoading(false);
 
         // if(result)
-        // {
-        //     setStep(2);
-        //     dispatch(setCourse(result));
-        // }
+        {
+            dispatch(setStep(2));
+            toast.error("Unable to update The Course, working on it !! Available in next version !!")
+            // dispatch(setCourse(result));
+        }
         
         }
         else{
@@ -223,14 +242,14 @@ export default  function CourseInformationForm (){
         formData.append("instructions", JSON.stringify(data.courseRequirements));
         formData.append("status", "Draft");
         formData.append("thumbnail" , data.courseImage);
-        formData.append('courseTags',data.courseTags);
+        formData.append('courseTags', JSON.stringify(data.courseTags));
 
-        console.log(" Logging The Data -->> " , data);
+        console.log(" Logging The Data -->> " , data ,  JSON.stringify(data.courseTags));
 
 
         setLoading(true);
         // console.log("BEFORE add course API call");
-        console.log("PRINTING FORMDATA ===+++===+++=== ", formData);
+        // console.log("PRINTING FORMDATA ===+++===+++=== ", formData);
         const result = await dispatch(addCourse(formData,token));
         console.log("Result Of Add Course  " , result);
 
@@ -244,16 +263,11 @@ export default  function CourseInformationForm (){
 
         setLoading(false);
        
-        console.log("PRINTING result After  Backend Call ==++==++==++==++ ", result);
-         
-
-
-         
+        // console.log("PRINTING result After  Backend Call ==++==++==++==++ ", result);
      }
-
-    
-
-
+     if(editCourse){
+        console.log("Hello Ba" , course)
+     }
     }
     
     return(
@@ -272,7 +286,7 @@ export default  function CourseInformationForm (){
             />
             {
                 errors.courseTitle && (
-                    <span>Course Title is Required**</span>
+                    <span>Course Title is Required*</span>
                 )
             }
         </div>
@@ -289,14 +303,14 @@ export default  function CourseInformationForm (){
                 errors.courseShortDesc && (<span
                  className="  bg-pink-300"
                 >
-                    Course Description is required**
+                    Course Description is required*
                 </span>)
             }
 
         </div>
 
         <div className='relative'>
-            <label htmlFor='coursePrice'>Course Price<sup  className="  bg-pink-300" >*</sup></label>
+            <label htmlFor='coursePrice'>Course Price<sup  className=" text-pink-500" >*</sup></label>
             <input
             
                 id='coursePrice'
@@ -310,7 +324,7 @@ export default  function CourseInformationForm (){
             <HiOutlineCurrencyRupee  className=' px-1 text-2xl  absolute top-1/2 translate-y-[-10%]  text-richblack-400 '/>
             {
                 errors.coursePrice && (
-                    <span className=" text-pink-200 ">Course Price is Required**</span>
+                    <span className=" text-pink-200 ">Course Price is Required*</span>
                 )
             }
         </div>
@@ -350,7 +364,7 @@ export default  function CourseInformationForm (){
         <ChipInput
         label="Tags"
         name="courseTags"
-        placeholder="Enter Tags and press Enter"
+        placeholder="Enter Tag and press Enter"
         register={register}
         errors={errors}
         setValue={setValue}
@@ -365,7 +379,7 @@ export default  function CourseInformationForm (){
         register={register}
         setValue={setValue}
         errors={errors}
-        editData={editCourse ? course?.thumbnail : null}
+        editData={editCourse ? course?.tumbnail : null}
       />
 
         
@@ -380,7 +394,7 @@ export default  function CourseInformationForm (){
             />
             {errors.courseBenefits && (
                 <span>
-                    Benefits of the course are required**
+                    Benefits of the course are required*
                 </span>
             )}
         </div>
@@ -391,6 +405,7 @@ export default  function CourseInformationForm (){
             register={register}
             errors={errors}
             setValue={setValue}
+            requirments ={editCourse ? course?.instructions : []}
             getValues={getValues}
         />
         <div className=" flex items-center justify-center gap-4 ">

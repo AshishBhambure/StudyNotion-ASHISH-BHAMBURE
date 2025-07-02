@@ -26,6 +26,8 @@ function loadScript(src)
 
 
 export async function buyCourse(token,courses,userDetails,navigate,dispatch){
+    
+    // console.log("Env Is Here ::: " , process.env.RAZORPAY_KEY)
     const toastId = toast.loading('loading');
     try{
         const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
@@ -52,7 +54,7 @@ export async function buyCourse(token,courses,userDetails,navigate,dispatch){
 
         //options
         const options ={
-            key:process.env.RAZORPAY_KEY,
+            key:"rzp_test_pm2JZhqmb1iljx",
             currency:orderResponse.data.data.currency,
             amount:`${orderResponse.data.data.amount}`,
             order_id:orderResponse.data.data.id,
@@ -60,11 +62,12 @@ export async function buyCourse(token,courses,userDetails,navigate,dispatch){
             description:"Thank you for purachasing course",
             image:rzpLogo,
             prefill:{
-                name:`${userDetails.firstName}`,
+                name:`${userDetails?.firstName || userDetails?.firstname}`,
                 email:userDetails.email
             },
             handler:function (response)
             {
+                console.log("------------- Response in Handler -----------" ,response);
                 // send Successful mail
                 // sendPaymentSuccessEmail(response,orderResponse?.amount,token)
                 //verify payment
@@ -75,7 +78,10 @@ export async function buyCourse(token,courses,userDetails,navigate,dispatch){
         }
 
         const paymentObject = new window.Razorpay(options);
+        console.log("Payment Object Bef Open " ,paymentObject)
         paymentObject.open();
+        console.log("Payment Object After Open " ,paymentObject)
+
         paymentObject.on("payment.failed", function(response) {
             toast.error("oops, payment failed");
             console.log(response.error);

@@ -14,8 +14,6 @@ const courseSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
         required:true,
-
-
     },
     whatYouWillLearn:{
         type:String,
@@ -65,9 +63,9 @@ const courseSchema = new mongoose.Schema({
     },
     createdAt:{
         type:Date,
-        default:Date.now(),
+        default:Date.now,
     },
-    CourseProgress: {
+     CourseProgress: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "CourseProgress",
       },

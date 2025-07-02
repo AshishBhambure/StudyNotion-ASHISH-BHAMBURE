@@ -32,7 +32,7 @@ const CourseBuilderForm = () => {
  }
 
  function goToNext(){
-    console.log("hello");
+    // console.log("hello");
      if(course?.courseContent?.length === 0)
      {
         toast.error("Please Add At least one Section ");
@@ -58,7 +58,6 @@ const CourseBuilderForm = () => {
     setLoading(true);
   if(editSectionName)
   {
-    // Edit The Section Name
 
     result = await updateSection({
          sectionName : data.sectionName,
@@ -99,7 +98,7 @@ const CourseBuilderForm = () => {
  }
     return(
         <div className=" text-white ">
-            <p className=" my-2 "> Course Builder </p>
+            <p className=" my-2   text-lg  text-yellow-200  font-bold"> Course Builder </p>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className=" flex gap-2 items-center ">
                     <label htmlFor="sectionName">Section Name<sup className=" text-pink-300">* </sup></label>
@@ -107,7 +106,7 @@ const CourseBuilderForm = () => {
                       id="sectionName"
                       placeholder="Add Section Name"
                       {...register('sectionName',{required:true})}
-                     className=" border border-black rounded-md lg:h-[40px]  bg-richblack-700 w-[70%]  "
+                     className=" p-2 border border-black rounded-md lg:h-[40px]  bg-richblack-700 w-[70%]  "
                      >
                     </input>
                     {
@@ -143,7 +142,7 @@ const CourseBuilderForm = () => {
                 
 
             }
-            <div className=" flex gap-4 ">
+            <div className=" flex gap-4  py-4 ">
                 <button 
                  onClick={goBack}
                 className=" bg-richblack-800 text-white px-2 py-1 rounded-md">

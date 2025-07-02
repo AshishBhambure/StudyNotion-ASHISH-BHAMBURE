@@ -15,7 +15,7 @@ exports.createCourse = async(req,res)=>{
 //Fetch The dat from req body
 
 // Here Pass category ki id 
-const {courseName, courseDescription ,whatYouWillLearn , price , category ,courseTags} = req.body;
+const {courseName, courseDescription ,whatYouWillLearn , price , category ,courseTags,instructions} = req.body;
 console.log("CourseTags -- .>>" ,courseTags);
 console.log(req.files);
 const thumbnail =req.files.thumbnail;
@@ -80,7 +80,8 @@ const newCourse = await Course.create({
     price,
     category:categoryDetails._id,
     tumbnail:response.secure_url,
-    tags:courseTags,
+    tags:JSON.parse(courseTags),
+    instructions:JSON.parse(instructions),
     status:'Draft'
 
 });
@@ -131,7 +132,7 @@ return res.status(200).json({
 exports.editCourse = async (req, res) => {
 	try {
 		// Get course ID from request parameters
-		const courseId = req.body;
+		const {courseId} = req.body;
         console.log(courseId);
 		// Get all required fields from request body
 		let {
@@ -142,6 +143,7 @@ exports.editCourse = async (req, res) => {
 			category,
 			status,
 			instructions,
+      courseTags
 		} = req.body;
 
 		// Check if any of the required fields are missing
@@ -174,7 +176,8 @@ exports.editCourse = async (req, res) => {
 		course.price = price;
 		course.category = category;
 		course.status = status || "Draft";
-		course.instructions = instructions;
+		course.instructions = JSON.parse(instructions);
+    course.tags = JSON.parse(courseTags);
 
 		// Save the updated course
 		await course.save();
@@ -387,10 +390,10 @@ exports.getCourseById = async (req,res)=>{
 exports.studentEnrolledCourses = async(req,res)=>{
 
     try{
-        console.log("Logging the USer" ,req.user);
+        // console.log("Logging the USer" ,req.user);
          const userId = req.user;
          const uid = new mongoose.Types.ObjectId(userId);
-         console.log("UID--- ",uid);
+        //  console.log("UID--- ",uid);
          const enrolledCourses = await User.findById(uid).populate({
             path: 'courses',
             populate: [
@@ -413,18 +416,54 @@ exports.studentEnrolledCourses = async(req,res)=>{
                     message:"User Not Found "
                 }
             )
-         }
+         } 
+ 
+ 
+        //  console.log("Enrolled Courses ",enrolledCourses);
         
 
         //  course Progress 
-        // let totalVideos = 0;
-        // enrolledCourses.courses?.courseContent?.forEach((section)=>  totalVideos += section?.subSection.length);
-        //  let courseProgress =totalVideos/enrolledCourses?.courses?.courseProgress?.length;
+        let totalVideos = 0;
+        let courseProgressDeatails = [];
+
+await Promise.all(
+  enrolledCourses.courses.map(async (course) => {
+    let totalVideosInCourse = 0;
+
+    course.courseContent.forEach((section) => {
+      totalVideosInCourse += section?.subSection?.length || 0;
+    });
+
+    let courseProgressForUser = await CourseProgress.find({
+      userId: new mongoose.Types.ObjectId(userId),
+      courseID: new mongoose.Types.ObjectId(course._id),
+    });
+
+    let completedVideosInCourse = courseProgressForUser[0]?.completedVideos?.length || 0;
+
+    courseProgressDeatails.push({
+      courseId: course._id,
+      completionPercentage:
+        totalVideosInCourse === 0
+          ? 0
+          : completedVideosInCourse*100 / totalVideosInCourse,
+    });
+    course.progressPercentage = completedVideosInCourse*100 / totalVideosInCourse;
+
+    console.log("Course ", course);
+  })
+);
+
+console.log(" course Prog ", courseProgressDeatails); // ✅ Will now show the correct array
+
+
+        // console.log("course Prog ",courseProgressDeatails)
          return res.status(200).json(
             {
                 success:true,
                 message:"Enrooled Courses Fetched Successfully ",
                 data:enrolledCourses,
+                courseProgress:courseProgressDeatails
             }
          )
 

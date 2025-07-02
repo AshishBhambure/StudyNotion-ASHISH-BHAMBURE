@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 const EnrolledCourses = () => {
     const { token } = useSelector((state) => state.auth);
     const [enrolledCourses, setEnrolledCourses] = useState(null);
+    const[courseProgress, setCourseProgress] = useState();
+    
 
     const navigate = useNavigate();
 
@@ -17,8 +19,9 @@ const EnrolledCourses = () => {
 
     const getEnrolledCourses = async () => {
         try {
-            const response = await getstudentEnrolledCourses(token);
+            const response = await getstudentEnrolledCourses(token,setCourseProgress);
             setEnrolledCourses(response);
+            console.log("Response  <><><>", response);
         } catch (e) {
             console.log("Unable to fetch Enrolled Courses");
         }
@@ -54,7 +57,6 @@ const EnrolledCourses = () => {
                         <div className="w-full h-full flex items-center justify-center">You Have Not Enrolled in any course Yet</div>
                     ) : (
                         <div className="overflow-x-auto w-full "
-                          
 
                         >
                             <table className="w-full divide-y divide-richblack-500">
@@ -68,44 +70,50 @@ const EnrolledCourses = () => {
                                     </tr>
                                 </thead>
                                 <tbody className=" w-full ">
-                                    {enrolledCourses.map((course, index) => (
-                                        // <div
-                                        
-                                        //   className=" cursor-pointer w-full "
-                                        // >
-                                        <tr key={index} className=" w-full  items-center  border-b border-l border-r border-richblack-500">
-                                            <td className="px-4 py-2 flex items-center gap-2">
-                                                <img src={course.tumbnail} alt="Thumbnail" className="h-[50px] w-[50px] rounded-md" />
-                                                <div className="flex flex-col gap-2">
-                                                    <p className="text-lg">{course.courseName}</p>
-                                                    <p>{course.courseDescription}</p>
-                                                </div>
-                                            </td>
-                                            <td className="px-4 py-2">
-                                                {getTimeDuration(course)}
-                                            </td>
-                                            <td className="px-4 py-2">
-                                                <p>Progress: {course.progressPercentage || 50}%</p>
-                                                <ProgressBar
-                                                    completed={course.progressPercentage || 50}
-                                                    height="8px"
-                                                    isLabelVisible={false}
-                                                />
-                                            </td>
+                                    {enrolledCourses.map((course, index) => {
+                                        let progressEntry = courseProgress.find(
+                                            (progress) => progress.courseId === course._id
+                                        );
 
-                                            <td className=" hover:cursor-pointer">
-                                                <SlOptionsVertical/>
-                                            </td>
+                                        const progressValue = Math.round(progressEntry?.completionPercentage || 0);
+                                        console.log("Progress Value" , progressValue);
 
-                                            <td className=" px-1 " ><div onClick={()=>{
-                                            navigate(
-                                                `/view-course/${course?._id}/section/${course.courseContent?.[0]?._id}/sub-section/${course.courseContent?.[0]?.subSection?.[0]?._id}`
-                                              )
-                
-                                          }} className=" flex  items-center justify-center text-black self-center py-1 rounded-md bg-yellow-50 ">View Course </div></td>
-                                        </tr>
-                                        // </div>
-                                    ))}
+                                        return (
+
+                                            <tr key={index} className=" w-full  items-center  border-b border-l border-r border-richblack-500">
+                                                <td className="px-4 py-2 flex items-center gap-2">
+                                                    <img src={course.tumbnail} alt="Thumbnail" className="h-[50px] w-[50px] rounded-md" />
+                                                    <div className="flex flex-col gap-2">
+                                                        <p className="text-lg">{course.courseName}</p>
+                                                        <p>{course.courseDescription}</p>
+                                                    </div>
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    {getTimeDuration(course)}
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    <p>Progress: {progressValue || 0 }%</p>
+                                                    <ProgressBar
+                                                        completed={progressValue || 0 }
+                                                        height="8px"
+                                                        isLabelVisible={false}
+                                                    />
+                                                </td>
+
+                                                <td className=" hover:cursor-pointer">
+                                                    <SlOptionsVertical />
+                                                </td>
+
+                                                <td className=" px-1 " ><div onClick={() => {
+                                                    navigate(
+                                                        `/view-course/${course?._id}/section/${course.courseContent?.[0]?._id}/sub-section/${course.courseContent?.[0]?.subSection?.[0]?._id}`
+                                                    )
+
+                                                }} className=" flex  items-center justify-center text-black self-center py-1 rounded-md bg-yellow-50  cursor-pointer">View Course </div></td>
+                                            </tr>
+                                            // </div>
+                                        )
+                                    })}
                                 </tbody>
                             </table>
                         </div>

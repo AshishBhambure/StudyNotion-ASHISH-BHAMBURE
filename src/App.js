@@ -54,14 +54,13 @@ function App() {
               <PrivateRoute>
                    <Dashboard/>
               </PrivateRoute>
-           
-
-            }>
+            }
+            >
 
               <Route path="/dashboard/enrolled-courses" element={<EnrolledCourses/>}></Route>
-           <Route path="/dashboard/cart" element={<Cart/> }></Route>
+              <Route path="/dashboard/cart" element={<Cart/> }></Route>
            
-           <Route path="/dashboard/my-profile" element={<MyProfile/>}></Route>
+             <Route path="/dashboard/my-profile" element={<MyProfile/>}></Route>
             {
               user?.accountType === "Student" 
               // &&(

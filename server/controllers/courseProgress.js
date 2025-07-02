@@ -37,7 +37,7 @@ exports.updateCourseProgressDetails =async(req,res)=>{
        {
         return res.status(404).json({
             success:false,
-            message:"Videoalready Completed"
+            message:"Video already Completed"
         })
        }
 

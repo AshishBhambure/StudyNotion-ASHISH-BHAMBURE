@@ -23,7 +23,7 @@ function Catalog() {
             setCategoryId(cId);
            
           } catch (error) {
-            console.log("Could not fetch Categories.", error)
+            console.log(" Could not fetch Categories.", error)
           }
           setLoading(false)
         })

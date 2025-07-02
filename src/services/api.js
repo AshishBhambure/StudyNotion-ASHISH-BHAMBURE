@@ -23,9 +23,7 @@ export  function getAllCategories(){
 
       const categories  = await  apiConnector("GET" , CATEGORIES_API );
       console.log(categories);
-
       return categories.data.data;
-
      }
      catch(e){
        console.log("Error While Fetching The Categoriues "  , e);
@@ -151,7 +149,9 @@ export function sendOtp(email, navigate) {
     catch (error) {
       console.error("SENDOTP API ERROR............", error);
       toast.error("Could Not Send OTP");
-    } finally {
+    } 
+    
+    finally {
       dispatch(setLoading(false));
       toast.dismiss(toastId);
     }
@@ -203,7 +203,7 @@ export function login(email, password, navigate) {
 
 
 export function contactUsSender (data){
-  const contactUsApi = 'http://localhost:4000/api' + '/contact-us'
+  const contactUsApi = BASE_URL + '/contact-us'
   console.log(contactUsApi)
   return async(dispatch) =>{
     try{
@@ -219,7 +219,7 @@ export function contactUsSender (data){
        console.log(response); 
     }
     catch(e){
-      toast.error(e.message);
+        toast.error(e.message);
         console.log(e);
     }
   }
@@ -423,6 +423,38 @@ export  function addCourse(data,token,dispatch){
   }
   
 }
+
+export function editCourseFunc(data, token, dispatch) {
+  const editCourseApi = BASE_URL + '/editCourse';
+  let result = null;
+
+  return async () => {
+    try {
+      const toastId = toast.loading('Updating');
+
+      const response = await apiConnector("POST", editCourseApi, data, {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      });
+
+      toast.dismiss(toastId);
+      console.log("EDIT COURSE API RESPONSE............", response);
+
+      if (!response?.data?.success) {
+        throw new Error("Could Not Update Course Details");
+      }
+
+      toast.success("Course Details Updated Successfully");
+      result = response?.data?.data;
+
+      return result;
+    } catch (error) {
+      console.log("EDIT COURSE API ERROR............", error);
+      toast.error(error.message);
+    }
+  };
+}
+
 
 export async function deleteCourse(data){
   const deleteCourseApi = BASE_URL + '/deleteCourse';
@@ -648,7 +680,7 @@ export async function getCatalogPageData(categoryId){
 }
 
 
-export const getstudentEnrolledCourses = async(token)=>{
+export const getstudentEnrolledCourses = async(token,setCourseProgress)=>{
   const api = BASE_URL + '/studentEnrolledCourses';
   const toastId = toast.loading('loading .. ')
   try{
@@ -664,6 +696,7 @@ export const getstudentEnrolledCourses = async(token)=>{
 
     console.log("Result of getting Enrolled Students" ,result.data.data.courses);
      toast.dismiss(toastId);
+     setCourseProgress(result.data.courseProgress);
     return  result.data.data.courses;
   }
   catch(e)

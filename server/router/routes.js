@@ -13,7 +13,6 @@ const { verifyPayment, capturePayment, sendPaymentSuccessEmail } = require('../c
 const { updateCourseProgressDetails } = require('../controllers/courseProgress');
 
 const router = express.Router();
-
 router.post('/signup', signUp);
 router.post('/sendotp',sendOtp);
 router.post('/login',login);

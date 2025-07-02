@@ -12,8 +12,6 @@ const [loading,setLoading] =useState(false);
 const{
     register,handleSubmit,
     reset,formState:{errors,isSubmitSuccessful},
-
-
 } =useForm();
 
 useEffect(()=>{
